@@ -1,0 +1,17 @@
+public class PokemonArena implements IPokemonArena {
+
+    @Override
+    public void sendCommand(String command, IPokomonTrainer pokomonTrainer) {
+        
+    }
+
+    @Override
+    public void addPokemonTrainer(IPokomonTrainer pokomonTrainer) {
+
+    }
+
+    @Override
+    public void exitPokemonTrainer(IPokomonTrainer pokomonTrainer) {
+
+    }
+}
