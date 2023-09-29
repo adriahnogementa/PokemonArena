@@ -8,8 +8,8 @@ public class Main {
         Socket socket = new Socket("localhost", 9090);
 
         System.out.println("Gib deinen Namen ein");
-        String username = scanner.next();
-       // Chatter chatter = new Chatter(username);
+        String pokemonTrainerName = scanner.next();
+       PokemonTrainer pokemonTrainer = new PokemonTrainer(pokemonTrainerName);
 
        // ChatRoomProxy proxy = new ChatRoomProxy(socket);
 

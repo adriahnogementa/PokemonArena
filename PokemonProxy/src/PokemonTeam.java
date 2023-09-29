@@ -1,5 +1,15 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class PokemonTeam extends ArrayList<Pokemon> {
+    public PokemonTeam() {
+        super();
+    }
+
+    public PokemonTeam(int initialCapacity) {
+        super(initialCapacity);
+    }
+
+    public PokemonTeam(PokemonTeam pokemonTeam) {
+        super(pokemonTeam);
+    }
 }
