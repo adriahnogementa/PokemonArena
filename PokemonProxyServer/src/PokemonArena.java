@@ -6,12 +6,12 @@ public class PokemonArena implements IPokemonArena {
     }
 
     @Override
-    public void addPokemonTrainer(IPokomonTrainer pokomonTrainer) {
+    public void enterPokemonArena(IPokomonTrainer pokomonTrainer) {
 
     }
 
     @Override
-    public void exitPokemonTrainer(IPokomonTrainer pokomonTrainer) {
+    public void exitPokemonArena(IPokomonTrainer pokomonTrainer) {
 
     }
 }
