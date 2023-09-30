@@ -4,42 +4,43 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         Scanner scanner = new Scanner(System.in);
-        Socket socket = new Socket("localhost", 9090);
+        Socket socket = new Socket("localhost", 1234);
 
-        System.out.println("Gib deinen Namen ein");
-        String pokemonTrainerName = scanner.next();
-       PokemonTrainer pokemonTrainer = new PokemonTrainer(pokemonTrainerName);
+        System.out.println("Enter your Pokemon Trainer name: ");
+        String pokemonTrainerName = scanner.nextLine();
+        PokemonTrainer pokemonTrainer = new PokemonTrainer(pokemonTrainerName, new PokemonTeam());
 
-       // ChatRoomProxy proxy = new ChatRoomProxy(socket);
+        PokemonArenaProxy pokemonArenaProxy = new PokemonArenaProxy(socket, pokemonTrainer);
 
-        boolean running = true;
-        while (running) {
-            System.out.println("1. Send Message ; 2. Enter Chatroom ; 3. Leave Chatroom ; 4. Verbindung beenden");
-            String choice = scanner.next();
-            switch (choice) {
-                case "1":
-                    System.out.println("Enter message: ");
-                    String message = scanner.next();
-                    try {
-                    //    proxy.sendMessage(message, chatter);
-                    } catch (Exception e) {
-                        System.err.println("Du bist nicht im Chatroom");
-                    }
-                    break;
-                case "2":
-              //      proxy.addChatter(chatter);
-                    break;
-                case "3":
-             //       proxy.exitChatter(chatter);
-                    break;
-                case "4":
-           //         proxy.endConnection();
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Pls enter 1, 2 or 3");
-            }
+        boolean isRunning = true;
+
+        while (isRunning) {
+         System.out.println("1. Send Command ; 2. Enter Arena ; 3. Leave Arena ; 4. Disconnect");
+        String input = scanner.nextLine();
+        switch (input) {
+            case "1":
+                System.out.println("Enter the command");
+                String command = scanner.nextLine();
+                pokemonArenaProxy.sendCommand(command, pokemonTrainer);
+                break;
+            case "2":
+                pokemonArenaProxy.enterPokemonArena(pokemonTrainer);
+                break;
+            case "3":
+                pokemonArenaProxy.exitPokemonArena(pokemonTrainer);
+                break;
+            case "4":
+                pokemonArenaProxy.endConnection();
+                isRunning = false;
+                break;
+            default:
+                System.out.println("Invalid input");
+                break;
         }
+
+        }
+
     }
 }

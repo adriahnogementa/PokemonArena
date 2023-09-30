@@ -1,4 +1,4 @@
-public class Pokemon implements IPokemon{
+public class Pokemon {
     String name;
     int hp;
     int attack;

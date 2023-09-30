@@ -5,12 +5,6 @@ public class PokemonTeam extends ArrayList<Pokemon> {
 
     public PokemonTeam() {
         super();
-        this.add(new Pokemon("Pikachu", 100, 100, 100, 100));
-        this.add(new Pokemon("Charmander", 100, 100, 100, 100));
-        this.add(new Pokemon("Squirtle", 100, 100, 100, 100));
-        this.add(new Pokemon("Bulbasaur", 100, 100, 100, 100));
-        this.add(new Pokemon("Eevee", 100, 100, 100, 100));
-        this.add(new Pokemon("Mew", 100, 100, 100, 100));
     }
 
     public void addPokemon(Pokemon pokemon) {
