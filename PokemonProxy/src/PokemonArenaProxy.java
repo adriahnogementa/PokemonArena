@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class PokemonArenaProxy implements IPokemonArena{
     private Socket socket;
@@ -37,17 +38,16 @@ public class PokemonArenaProxy implements IPokemonArena{
 
     }
 
-    @Override
     public void sendPokemonTrainer(IPokemonTrainer pokomonTrainer) {
         try{
             if (!pokemonArenaIsRunning){
+                objectOutputStream.writeObject(pokomonTrainer);
                 rpcReader.readLine(); // Give me your IP-Adress
                 rpcWriter.println(Utility.getLocalIpAddress());
                 rpcReader.readLine(); // Give me your Port
                 ServerSocket serverSocket = new ServerSocket(0);
                 rpcWriter.println(serverSocket.getLocalPort());
                 Socket socket = serverSocket.accept();
-                objectOutputStream.writeObject(pokomonTrainer);
                 PokemonTrainerServerProxy pokemonTrainerServerProxy = new PokemonTrainerServerProxy(pokomonTrainer, socket);
                 Thread thread = new Thread(pokemonTrainerServerProxy);
                 thread.start();
@@ -64,9 +64,9 @@ public class PokemonArenaProxy implements IPokemonArena{
     @Override
     public void enterPokemonArena(IPokemonTrainer pokomonTrainer) {
         try{
+            sendPokemonTrainer(pokomonTrainer);
             rpcReader.readLine();
             rpcWriter.println("Enter Pokemon Arena");
-            sendPokemonTrainer(pokomonTrainer);
             String commandResult = rpcReader.readLine();
             if(commandResult.equals("Pokemon Arena entered")){
                 System.out.println("Pokemon Arena entered");}
@@ -91,6 +91,11 @@ public class PokemonArenaProxy implements IPokemonArena{
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<IPokemonTrainer> getPokemonTrainers() {
+        return null;
     }
 
     public void endConnection() {

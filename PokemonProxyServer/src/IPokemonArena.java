@@ -1,8 +1,10 @@
-public interface IPokemonArena {
-    void sendCommand(String command, IPokemonTrainer pokomonTrainer);
-    void sendPokemonTrainer(IPokemonTrainer pokomonTrainer);
-    void enterPokemonArena(IPokemonTrainer pokomonTrainer);
-    void exitPokemonArena(IPokemonTrainer pokomonTrainer);
+import java.io.IOException;
+import java.util.List;
 
-    boolean arenaIsNotFull();
+public interface IPokemonArena {
+    void sendCommand(String command, IPokemonTrainer pokemonTrainer) throws IOException;
+    void enterPokemonArena(IPokemonTrainer pokemonTrainer) throws IOException;
+    void exitPokemonArena(IPokemonTrainer pokemonTrainer) throws IOException;
+
+    List<IPokemonTrainer> getPokemonTrainers();
 }

@@ -1,4 +1,6 @@
-public class Pokemon implements IPokemon{
+import java.io.Serializable;
+
+public class Pokemon implements IPokemon, Serializable {
     String name;
     int hp;
     int attack;

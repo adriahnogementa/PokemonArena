@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
-        Socket socket = new Socket("localhost", 1234);
+        Socket socket = new Socket("localhost", 9090);
 
         System.out.println("Enter your Pokemon Trainer name: ");
         String pokemonTrainerName = scanner.nextLine();

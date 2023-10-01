@@ -24,14 +24,17 @@ public class PokemonTrainerServerProxy implements Runnable {
        rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
        while(isRunning) {
 
-           rpcWriter.println("1. Receive Command ; 2. End the Connection");
+           rpcWriter.println("1. Receive Command ; 2. Get Trainer Name ; 3. End the Connection");
            String input = rpcReader.readLine();
 
            switch (input) {
                case "1":
                    receiveCommand();
                    break;
-               case "2":
+                case "2":
+                    getTrainerName();
+                    break;
+               case "3":
                    endConnection();
                    break;
                default:
@@ -44,6 +47,15 @@ public class PokemonTrainerServerProxy implements Runnable {
    }
 
 }
+
+    private void getTrainerName() {
+        try {
+            String trainerName = this.pokemonTrainer.getName();
+            rpcWriter.println(trainerName);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 
 
     private void receiveCommand(){

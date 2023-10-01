@@ -19,10 +19,5 @@ public class PokemonTrainer implements IPokemonTrainer, Serializable {
         return this.name;
     }
 
-    @Override
-    public PokemonTeam getPokemonTeam() {
-        return this.pokemonTeam;
-    }
-
 
 }

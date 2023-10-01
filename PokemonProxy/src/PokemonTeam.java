@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PokemonTeam extends ArrayList<Pokemon> {
+public class PokemonTeam extends ArrayList<Pokemon> implements Serializable {
 
 
     public PokemonTeam() {
