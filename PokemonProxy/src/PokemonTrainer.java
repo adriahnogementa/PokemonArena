@@ -1,4 +1,6 @@
-public class PokemonTrainer implements IPokemonTrainer {
+import java.io.Serializable;
+
+public class PokemonTrainer implements IPokemonTrainer, Serializable {
 
     private final String name;
     private PokemonTeam pokemonTeam;
@@ -24,5 +26,3 @@ public class PokemonTrainer implements IPokemonTrainer {
 
 
 }
-
-// Path: PokemonProxyServer/src/PokemonArena.java

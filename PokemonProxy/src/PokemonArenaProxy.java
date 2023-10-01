@@ -1,12 +1,11 @@
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class PokemonArenaProxy implements IPokemonArena{
     private Socket socket;
     private RpcWriter rpcWriter;
+    private ObjectOutputStream objectOutputStream;
     private RpcReader rpcReader;
     private final PokemonTrainer pokemonTrainer;
     private boolean pokemonArenaIsRunning = false;
@@ -15,6 +14,7 @@ public class PokemonArenaProxy implements IPokemonArena{
     public PokemonArenaProxy(Socket socket, PokemonTrainer pokemonTrainer) throws IOException {
         this.socket = socket;
         this.rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
+        this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         this.rpcWriter = new RpcWriter(new OutputStreamWriter(socket.getOutputStream()));
         this.pokemonTrainer = pokemonTrainer;
     }
@@ -66,6 +66,7 @@ public class PokemonArenaProxy implements IPokemonArena{
             rpcReader.readLine();
             rpcWriter.println("Enter Pokemon Arena");
             sendPokemonTrainer(pokomonTrainer);
+            objectOutputStream.writeObject(pokomonTrainer);
             String commandResult = rpcReader.readLine();
             if(commandResult.equals("Pokemon Arena entered")){
                 System.out.println("Pokemon Arena entered");}
