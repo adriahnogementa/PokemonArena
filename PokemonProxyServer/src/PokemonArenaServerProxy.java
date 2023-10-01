@@ -1,6 +1,7 @@
 import javax.imageio.IIOException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ public class PokemonArenaServerProxy implements Runnable{
 
     private Socket socket;
     private IPokemonArena pokemonArena;
+    private ObjectInputStream objectInputStream;
     private RpcWriter rpcWriter;
     private RpcReader rpcReader;
     private ArrayList<IPokemonTrainer> pokemonTrainers = new ArrayList<>();
@@ -23,8 +25,9 @@ public class PokemonArenaServerProxy implements Runnable{
     @Override
     public void run() {
      try {
-      this.rpcWriter = new RpcWriter(new OutputStreamWriter(socket.getOutputStream()));
+        this.rpcWriter = new RpcWriter(new OutputStreamWriter(socket.getOutputStream()));
         this.rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
+        this.objectInputStream = new ObjectInputStream(socket.getInputStream());
         while (isRunning){
             rpcWriter.println("1. Send Command ; 2. Enter Arena ; 3. Leave Arena  ; 4. End the Connection");
             String input = rpcReader.readLine();
@@ -55,6 +58,15 @@ public class PokemonArenaServerProxy implements Runnable{
     }
 
     private void enterPokemonArena() {
+        try {
+            if (this.pokemonArena.arenaIsNotFull()){
+                this.pokemonTrainers.add((IPokemonTrainer) objectInputStream.readObject());
+                rpcWriter.println("Pokemon Arena entered");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            rpcWriter.println("Error while entering the Pokemon Arena");
+        }
 
     }
 
@@ -67,5 +79,6 @@ public class PokemonArenaServerProxy implements Runnable{
     private void sendCommand() {
     }
 
+    }
 
 }

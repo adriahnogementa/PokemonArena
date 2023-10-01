@@ -47,13 +47,14 @@ public class PokemonArenaProxy implements IPokemonArena{
                 ServerSocket serverSocket = new ServerSocket(0);
                 rpcWriter.println(serverSocket.getLocalPort());
                 Socket socket = serverSocket.accept();
+                objectOutputStream.writeObject(pokomonTrainer);
                 PokemonTrainerServerProxy pokemonTrainerServerProxy = new PokemonTrainerServerProxy(pokomonTrainer, socket);
                 Thread thread = new Thread(pokemonTrainerServerProxy);
                 thread.start();
                 this.pokemonArenaIsRunning = true;
             }else {
                 rpcReader.readLine();
-                rpcWriter.println(this.pokemonTrainer);
+                objectOutputStream.writeObject(pokomonTrainer);
             }
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
@@ -66,7 +67,6 @@ public class PokemonArenaProxy implements IPokemonArena{
             rpcReader.readLine();
             rpcWriter.println("Enter Pokemon Arena");
             sendPokemonTrainer(pokomonTrainer);
-            objectOutputStream.writeObject(pokomonTrainer);
             String commandResult = rpcReader.readLine();
             if(commandResult.equals("Pokemon Arena entered")){
                 System.out.println("Pokemon Arena entered");}

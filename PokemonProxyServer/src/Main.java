@@ -6,12 +6,12 @@ public class Main {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(9090);
         boolean running = true;
-       // ChatRoom chatRoom = new ChatRoom();
+        PokemonArena pokemonArena = new PokemonArena();
         while(running) {
-            Socket s = serverSocket.accept();
-        //    ChatRoomServerProxy serverProxy = new ChatRoomServerProxy(s, chatRoom);
-        //    Thread t = new Thread(serverProxy);
-        //    t.start();
+            Socket socket = serverSocket.accept();
+            PokemonArenaServerProxy pokemonArenaServerProxy = new PokemonArenaServerProxy(socket, pokemonArena);
+            Thread thread = new Thread(pokemonArenaServerProxy);
+            thread.start();
         }
     }
 }

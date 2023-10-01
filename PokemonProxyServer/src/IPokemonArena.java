@@ -3,4 +3,6 @@ public interface IPokemonArena {
     void sendPokemonTrainer(IPokemonTrainer pokomonTrainer);
     void enterPokemonArena(IPokemonTrainer pokomonTrainer);
     void exitPokemonArena(IPokemonTrainer pokomonTrainer);
+
+    boolean arenaIsNotFull();
 }
