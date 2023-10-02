@@ -1,19 +1,19 @@
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class PokemonArenaServerProxy implements Runnable {
 
-    private Socket socket;
-    private IPokemonArena pokemonArena;
+    private final Socket socket;
+    private final IPokemonArena pokemonArena;
     private ObjectInputStream objectInputStream;
     private RpcWriter rpcWriter;
     private RpcReader rpcReader;
     private boolean isRunning = true;
+    private Hashtable<IPokemonTrainer, PokemonTrainer> pokemonTrainers = new Hashtable<>();
 
     public PokemonArenaServerProxy(Socket socket, IPokemonArena pokemonArena) {
         this.socket = socket;
@@ -54,25 +54,16 @@ public class PokemonArenaServerProxy implements Runnable {
     }
 
     private void leavePokemonArena() {
-        try {
-            if (!this.pokemonArena.getPokemonTrainers().isEmpty()) {
-                this.pokemonArena.getPokemonTrainers().remove((IPokemonTrainer) objectInputStream.readObject());
-                rpcWriter.println("Pokemon Arena left");
-            }
 
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            rpcWriter.println("Error while leaving the Pokemon Arena");
-        }
     }
 
     private void enterPokemonArena() {
         try {
-            IPokemonTrainer pokemonTrainer = (IPokemonTrainer) objectInputStream.readObject();
-            getPokemonTrainer(pokemonTrainer);
-            if (this.pokemonArena.getPokemonTrainers().size() < 2) {
-                this.pokemonArena.getPokemonTrainers().add(pokemonTrainer);
-                rpcWriter.println("Pokemon Arena entered");
+            PokemonTrainer pokemonTrainer = (PokemonTrainer) objectInputStream.readObject();
+            if (this.pokemonTrainers.size() < 3) {
+                getPokemonTrainer(pokemonTrainer);
+            }else {
+                rpcWriter.println("9. Pokemon Arena full");
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -89,29 +80,22 @@ public class PokemonArenaServerProxy implements Runnable {
 
     private void sendCommand() throws IOException {
 
-        rpcWriter.println("Enter the command");
-        String command = rpcReader.readLine();
-        rpcWriter.println("Command received");
-        try {
-            this.pokemonArena.sendCommand(command, (IPokemonTrainer) objectInputStream.readObject());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            rpcWriter.println("Error while sending the command");
-        }
     }
 
-    public IPokemonTrainer getPokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException, ClassNotFoundException {
-        if(!this.pokemonArena.getPokemonTrainers().contains(pokemonTrainer)) {
-            rpcWriter.println("Gib mir deine IP");
+    public void getPokemonTrainer(PokemonTrainer pokemonTrainer) throws IOException, ClassNotFoundException {
+        PokemonTrainer entry =  this.pokemonTrainers.get(pokemonTrainer);
+        if(entry == null) {
+            rpcWriter.println("0. Pokemon Trainer not in the Pokemon Arena");
+            rpcWriter.println("Give me your IP-Adress");
             String ip = rpcReader.readLine();
-            rpcWriter.println("Gib mir deinen Port");
+            rpcWriter.println("Give me your Port");
             String port = rpcReader.readLine();
             Socket s = new Socket(ip, Integer.parseInt(port));
             PokemonTrainerProxy pokemonTrainerProxy = new PokemonTrainerProxy(s);
-            this.pokemonArena.getPokemonTrainers().add(pokemonTrainerProxy);
-
+            this.pokemonTrainers.put(pokemonTrainerProxy, pokemonTrainer);
+        }else{
+            rpcWriter.println("9. Pokemon Trainer already in the Pokemon Arena");
         }
-        return pokemonTrainer;
     }
 
 }

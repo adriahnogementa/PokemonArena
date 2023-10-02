@@ -9,6 +9,7 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
     private RpcReader rpcReader;
     private RpcWriter rpcWriter;
 
+
     public PokemonTrainerProxy(Socket socket) throws IOException {
         this.socket = socket;
         this.rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
@@ -26,7 +27,7 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         try {
             rpcReader.readLine();
             rpcWriter.println("Give me your name");

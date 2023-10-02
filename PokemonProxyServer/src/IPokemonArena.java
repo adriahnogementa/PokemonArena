@@ -6,5 +6,4 @@ public interface IPokemonArena {
     void enterPokemonArena(IPokemonTrainer pokemonTrainer) throws IOException;
     void exitPokemonArena(IPokemonTrainer pokemonTrainer) throws IOException;
 
-    List<IPokemonTrainer> getPokemonTrainers();
 }

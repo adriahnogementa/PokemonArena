@@ -5,6 +5,5 @@ public interface IPokemonArena {
     void enterPokemonArena(IPokemonTrainer pokomonTrainer);
     void exitPokemonArena(IPokemonTrainer pokomonTrainer);
 
-    List<IPokemonTrainer> getPokemonTrainers();
 
 }

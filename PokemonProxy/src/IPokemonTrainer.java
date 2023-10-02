@@ -4,4 +4,6 @@ public interface IPokemonTrainer {
 
     String getName();
 
+    PokemonTeam getPokemonTeam();
+
 }

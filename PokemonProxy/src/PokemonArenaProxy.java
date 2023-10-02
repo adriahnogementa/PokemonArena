@@ -4,12 +4,12 @@ import java.net.Socket;
 import java.util.List;
 
 public class PokemonArenaProxy implements IPokemonArena{
-    private Socket socket;
-    private RpcWriter rpcWriter;
-    private ObjectOutputStream objectOutputStream;
-    private RpcReader rpcReader;
+    private final Socket socket;
+    private final RpcWriter rpcWriter;
+    private final ObjectOutputStream objectOutputStream;
+    private final RpcReader rpcReader;
     private final PokemonTrainer pokemonTrainer;
-    private boolean pokemonArenaIsRunning = false;
+
 
 
     public PokemonArenaProxy(Socket socket, PokemonTrainer pokemonTrainer) throws IOException {
@@ -21,85 +21,53 @@ public class PokemonArenaProxy implements IPokemonArena{
     }
     @Override
     public void sendCommand(String command, IPokemonTrainer pokomonTrainer) {
-        try {
-            rpcReader.readLine();
-            rpcWriter.println("Send Command");
-            rpcReader.readLine();
-            rpcWriter.println(command);
-            sendPokemonTrainer(pokomonTrainer);
-            String commandResult = rpcReader.readLine();
-            if(commandResult.equals("Command received")){
-                System.out.println("Command received");}
-            else{throw new RuntimeException("Error while sending the command");}
-
-        } catch (IOException e) {
-           throw new RuntimeException(e.getMessage());
-        }
 
     }
 
-    public void sendPokemonTrainer(IPokemonTrainer pokomonTrainer) {
+    private void sendPokemonTrainer(IPokemonTrainer pokemonTrainer) {
         try{
-            if (!pokemonArenaIsRunning){
-                objectOutputStream.writeObject(pokomonTrainer);
+            objectOutputStream.writeObject(pokemonTrainer);
+            String result = rpcReader.readLine();
+            if (result.startsWith("0")){ // PokemonTrainer can join Arena
                 rpcReader.readLine(); // Give me your IP-Adress
                 rpcWriter.println(Utility.getLocalIpAddress());
                 rpcReader.readLine(); // Give me your Port
                 ServerSocket serverSocket = new ServerSocket(0);
-                rpcWriter.println(serverSocket.getLocalPort());
+                rpcWriter.println(String.valueOf(serverSocket.getLocalPort()));
                 Socket socket = serverSocket.accept();
-                PokemonTrainerServerProxy pokemonTrainerServerProxy = new PokemonTrainerServerProxy(pokomonTrainer, socket);
+                PokemonTrainerServerProxy pokemonTrainerServerProxy = new PokemonTrainerServerProxy(pokemonTrainer, socket);
                 Thread thread = new Thread(pokemonTrainerServerProxy);
                 thread.start();
-                this.pokemonArenaIsRunning = true;
-            }else {
-                rpcReader.readLine();
-                objectOutputStream.writeObject(pokomonTrainer);
-            }
+                System.out.println("PokemonTrainer joined Arena");
+            }else if(result.startsWith("9")){ // PokemonTrainer can't join Arena
+                System.out.println("PokemonTrainer can't join Arena");}
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    public void enterPokemonArena(IPokemonTrainer pokomonTrainer) {
-        try{
-            sendPokemonTrainer(pokomonTrainer);
-            rpcReader.readLine();
-            rpcWriter.println("Enter Pokemon Arena");
-            String commandResult = rpcReader.readLine();
-            if(commandResult.equals("Pokemon Arena entered")){
-                System.out.println("Pokemon Arena entered");}
-            else{throw new RuntimeException("Error while entering the Pokemon Arena");}
-        }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void exitPokemonArena(IPokemonTrainer pokomonTrainer) {
-
+    public void enterPokemonArena(IPokemonTrainer pokemonTrainer) {
         try{
             rpcReader.readLine();
-            rpcWriter.println("Exit Pokemon Arena");
-            sendPokemonTrainer(pokomonTrainer);
+            rpcWriter.println("2"); // Enter Pokemon Arena
+            sendPokemonTrainer(pokemonTrainer);
             String commandResult = rpcReader.readLine();
-            if(commandResult.equals("Pokemon Arena exited")){
-                System.out.println("Pokemon Arena exited");}
-            else{throw new RuntimeException("Error while exiting the Pokemon Arena");}
+            if(commandResult.startsWith("9")){ // Pokemon Arena entered
+                System.out.println("Pokemon Arena is full");}
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
+
     }
 
     @Override
-    public List<IPokemonTrainer> getPokemonTrainers() {
-        return null;
+    public void exitPokemonArena(IPokemonTrainer pokemonTrainer) {
+
     }
+
 
     public void endConnection() {
-        this.pokemonArenaIsRunning = false;
         try {
             this.socket.close();
         } catch (IOException e) {

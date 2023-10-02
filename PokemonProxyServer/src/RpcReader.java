@@ -9,6 +9,8 @@ public class RpcReader extends BufferedReader {
 
     @Override
     public String readLine() throws IOException {
-        return super.readLine();
+        String msg = super.readLine();
+        System.out.println("Received: " + msg);
+        return msg;
     }
 }

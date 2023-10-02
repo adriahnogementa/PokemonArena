@@ -12,20 +12,20 @@ public class PokemonArena implements IPokemonArena {
             throw new RuntimeException("PokemonTrainer is not in the arena");
         }
         for (IPokemonTrainer trainer : this.pokemonTrainers){
-                pokemonTrainer.receiveCommand( trainer.getName() + " said: " + command);
+                pokemonTrainer.receiveCommand( trainer.name() + " said: " + command);
         }
     }
     @Override
     public void enterPokemonArena(IPokemonTrainer pokemonTrainer) throws IOException {
         this.pokemonTrainers.add(pokemonTrainer);
-        sendCommand(pokemonTrainer.getName() + " entered the arena", pokemonTrainer);
+        sendCommand(pokemonTrainer.name() + " entered the arena", pokemonTrainer);
 
     }
 
     @Override
     public void exitPokemonArena(IPokemonTrainer pokemonTrainer) throws IOException {
         this.pokemonTrainers.remove(pokemonTrainer);
-        sendCommand(pokemonTrainer.getName() + " left the arena", pokemonTrainer);
+        sendCommand(pokemonTrainer.name() + " left the arena", pokemonTrainer);
 
     }
 

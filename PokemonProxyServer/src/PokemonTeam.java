@@ -1,7 +1,10 @@
+import java.io.Serial;
 import java.util.ArrayList;
 
 public class PokemonTeam extends ArrayList<Pokemon> {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public PokemonTeam() {
         super();
