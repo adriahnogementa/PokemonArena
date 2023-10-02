@@ -83,8 +83,6 @@ public class PokemonArenaServerProxy implements Runnable {
     }
 
     public void getPokemonTrainer(PokemonTrainer pokemonTrainer) throws IOException, ClassNotFoundException {
-        PokemonTrainer entry =  this.pokemonTrainers.get(pokemonTrainer);
-        if(entry == null) {
             rpcWriter.println("0. Pokemon Trainer not in the Pokemon Arena");
             rpcWriter.println("Give me your IP-Adress");
             String ip = rpcReader.readLine();
@@ -93,9 +91,7 @@ public class PokemonArenaServerProxy implements Runnable {
             Socket s = new Socket(ip, Integer.parseInt(port));
             PokemonTrainerProxy pokemonTrainerProxy = new PokemonTrainerProxy(s);
             this.pokemonTrainers.put(pokemonTrainerProxy, pokemonTrainer);
-        }else{
-            rpcWriter.println("9. Pokemon Trainer already in the Pokemon Arena");
-        }
+            rpcWriter.println("0. Pokemon Trainer joined Arena");
     }
 
 }
