@@ -53,7 +53,11 @@ public class PokemonArenaServerProxy implements Runnable {
 
     private void leavePokemonArena() throws IOException, ClassNotFoundException {
        try {
-           pokemonArena.removePokemonTrainer(getPokemonTrainer());
+           IPokemonTrainer pokemonTrainer = getPokemonTrainerForLeavingArena();
+           if (pokemonTrainer == null) {
+               return;
+           }
+           pokemonArena.removePokemonTrainer(pokemonTrainer);
            rpcWriter.println("0. Pokemon Trainer left Arena");
        }catch (Exception e){
            e.printStackTrace();
@@ -63,9 +67,8 @@ public class PokemonArenaServerProxy implements Runnable {
 
     private void enterPokemonArena() {
         try {
-            if (this.pokemonTrainers.size() < 3) {
-                pokemonArena.addPokemonTrainer(getPokemonTrainer());
-                rpcWriter.println("0. Pokemon Trainer entered Arena");
+            if (this.pokemonTrainers.size() <= 2) {
+                pokemonArena.addPokemonTrainer(getPokemonTrainerForEnteringArena());
             } else {
                 rpcWriter.println("9. Pokemon Arena full");
             }
@@ -86,8 +89,7 @@ public class PokemonArenaServerProxy implements Runnable {
 
     }
 
-    public IPokemonTrainer getPokemonTrainer() throws IOException {
-            rpcWriter.println("Give me your Trainer");
+    private IPokemonTrainer getPokemonTrainerForEnteringArena() throws IOException {
             String trainerId = rpcReader.readLine();
             IPokemonTrainer ret = pokemonTrainers.get(trainerId);
             if (ret == null) {
@@ -98,10 +100,26 @@ public class PokemonArenaServerProxy implements Runnable {
                 Socket s = new Socket(ip, Integer.parseInt(port));
                 PokemonTrainerProxy pokemonTrainerProxy = new PokemonTrainerProxy(s);
                 this.pokemonTrainers.put(trainerId, pokemonTrainerProxy);
+                rpcWriter.println("0. Pokemon Trainer entered Arena");
+            }else {
+                rpcWriter.println("8. Pokemon Trainer already in Arena");
             }
             return pokemonTrainers.get(trainerId);
     }
 
+    private IPokemonTrainer getPokemonTrainerForLeavingArena() throws IOException {
+        String trainerId = rpcReader.readLine();
+        IPokemonTrainer ret = pokemonTrainers.get(trainerId);
+        if (ret == null) {
+            rpcWriter.println("9. Pokemon Trainer not in Arena");
+            return null;
+        }else {
+            rpcWriter.println("0. Pokemon Trainer left Arena");
+            IPokemonTrainer pokemonTrainer = pokemonTrainers.get(trainerId);
+            pokemonTrainers.remove(trainerId);
+            return pokemonTrainer;
+        }
+    }
 
 }
 

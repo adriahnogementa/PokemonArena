@@ -8,7 +8,7 @@ public class PokemonArenaProxy implements IPokemonArena {
     private final Socket socket;
     private final RpcWriter rpcWriter;
     private final RpcReader rpcReader;
-    private Hashtable<IPokemonTrainer, String> pokemonTrainers = new Hashtable<>();
+    private final Hashtable<IPokemonTrainer, String> pokemonTrainers = new Hashtable<>();
     private int maxId= 0;
 
 
@@ -26,13 +26,17 @@ public class PokemonArenaProxy implements IPokemonArena {
     @Override
     public void addPokemonTrainer(IPokemonTrainer pokemonTrainer) {
         try {
+            if (pokemonTrainers.containsKey(pokemonTrainer)) {
+                System.out.println("You are already in the Arena");
+                return;
+            }
             rpcReader.readLine();
             rpcWriter.println("2"); // Enter Pokemon Arena
             sendPokemonTrainer(pokemonTrainer);
             String commandResult = rpcReader.readLine();
             if (commandResult.startsWith("0")) { // Pokemon Arena entered
                 System.out.println("PokemonTrainer joined Arena");
-            } else if (commandResult.startsWith("9")) {
+            } else if (commandResult.startsWith("8")) {
                 System.out.println("Pokemontrainer already in Arena");
             } else if (commandResult.startsWith("9")) {
                 System.out.println("PokemonTrainer can't join Arena");
@@ -46,12 +50,17 @@ public class PokemonArenaProxy implements IPokemonArena {
     @Override
     public void removePokemonTrainer(IPokemonTrainer pokemonTrainer) {
         try {
+            if (!pokemonTrainers.containsKey(pokemonTrainer)) {
+                System.out.println("You have to enter the Arena first");
+                return;
+            }
             rpcReader.readLine();
             rpcWriter.println("3"); // Leave Pokemon Arena
             sendPokemonTrainer(pokemonTrainer);
             String commandResult = rpcReader.readLine();
             if (commandResult.startsWith("0")) { // Pokemon Arena left
                 System.out.println("PokemonTrainer left Arena");
+                this.pokemonTrainers.remove(pokemonTrainer);
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -74,7 +83,6 @@ public class PokemonArenaProxy implements IPokemonArena {
             maxId++;
             pokemonTrainers.put(pokemonTrainer, String.valueOf(maxId));
             String id = pokemonTrainers.get(pokemonTrainer);
-            rpcReader.readLine(); // Give me your ID
             rpcWriter.println(id);
             rpcReader.readLine(); // Give me your IP-Adress
             rpcWriter.println(Utility.getLocalIpAddress());
@@ -87,7 +95,6 @@ public class PokemonArenaProxy implements IPokemonArena {
             thread.start();
         }else {
             String id = pokemonTrainers.get(pokemonTrainer);
-            rpcReader.readLine();
             rpcWriter.println(id);
 
         }
