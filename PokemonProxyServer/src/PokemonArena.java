@@ -25,7 +25,7 @@ public class PokemonArena implements IPokemonArena {
     @Override
     public void removePokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException {
         this.pokemonTrainers.remove(pokemonTrainer);
-        //sendCommand(pokemonTrainer.getName() + " left the arena", pokemonTrainer);
+        sendCommand(pokemonTrainer.getName() + " left the arena", pokemonTrainer);
 
     }
 }

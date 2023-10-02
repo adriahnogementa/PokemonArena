@@ -51,7 +51,7 @@ public class PokemonTrainerServerProxy implements Runnable {
     private void getTrainerName() {
         try {
             String trainerName = this.pokemonTrainer.getName();
-            rpcWriter.println(trainerName);
+            rpcWriter.println("0."+ trainerName);
         }catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -59,14 +59,15 @@ public class PokemonTrainerServerProxy implements Runnable {
 
 
     private void receiveCommand(){
-        rpcWriter.println("Enter the command");
+        rpcWriter.println("Enter the command: 1. Attack ; 2. Heal");
         try {
-            this.pokemonTrainer.receiveCommand(rpcReader.readLine());
+            String command = rpcReader.readLine();
+            this.pokemonTrainer.receiveCommand(command);
+            rpcWriter.println("0. Command received");
         } catch (IOException e) {
             e.printStackTrace();
-            rpcWriter.println("Error while reading the command");
+            rpcWriter.println("1. Error while reading the command");
         }
-        rpcWriter.println("Command received");
     }
 
     private void endConnection() {

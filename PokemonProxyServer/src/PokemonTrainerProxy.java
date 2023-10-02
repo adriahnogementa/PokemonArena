@@ -17,18 +17,45 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
     }
 
 
-
     public void endConnection() throws IOException {
-
+        try {
+            rpcReader.readLine();
+            rpcWriter.println("3"); // End Connection
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void receiveCommand(String command) throws IOException {
+        try {
+            rpcReader.readLine();
+            rpcWriter.println("1"); // Receive Command
+            rpcReader.readLine();
+            rpcWriter.println(command);
+            String commandResult = rpcReader.readLine();
+            if (!commandResult.startsWith("0")) { // Command received
+                throw new RuntimeException(commandResult);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public String getName() throws IOException {
-        return null;
+        try {
+            rpcReader.readLine();
+            rpcWriter.println("2"); // Get Trainer Name
+            String commandResult = rpcReader.readLine();
+            if (commandResult.startsWith("0")) { // Trainer name received
+                return commandResult.substring(2);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
