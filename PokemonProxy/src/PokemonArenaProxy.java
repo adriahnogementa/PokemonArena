@@ -33,6 +33,8 @@ public class PokemonArenaProxy implements IPokemonArena {
             if (commandResult.startsWith("0")) { // Pokemon Arena entered
                 System.out.println("PokemonTrainer joined Arena");
             } else if (commandResult.startsWith("9")) {
+                System.out.println("Pokemontrainer already in Arena");
+            } else if (commandResult.startsWith("9")) {
                 System.out.println("PokemonTrainer can't join Arena");
             }
         } catch (Exception e) {

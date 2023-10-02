@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Hashtable;
@@ -67,7 +66,7 @@ public class PokemonArenaServerProxy implements Runnable {
             if (this.pokemonTrainers.size() < 3) {
                 pokemonArena.addPokemonTrainer(getPokemonTrainer());
                 rpcWriter.println("0. Pokemon Trainer entered Arena");
-            }else {
+            } else {
                 rpcWriter.println("9. Pokemon Arena full");
             }
         } catch (IOException  e) {

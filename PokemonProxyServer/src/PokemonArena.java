@@ -18,14 +18,12 @@ public class PokemonArena implements IPokemonArena {
     @Override
     public void addPokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException {
         this.pokemonTrainers.add(pokemonTrainer);
-        sendCommand(pokemonTrainer.getName() + " entered the arena", pokemonTrainer);
 
     }
 
     @Override
     public void removePokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException {
         this.pokemonTrainers.remove(pokemonTrainer);
-        sendCommand(pokemonTrainer.getName() + " left the arena", pokemonTrainer);
 
     }
 }
