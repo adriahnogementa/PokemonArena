@@ -13,7 +13,7 @@ public class PokemonArenaServerProxy implements Runnable {
     private RpcWriter rpcWriter;
     private RpcReader rpcReader;
     private boolean isRunning = true;
-    private Hashtable<PokemonTrainer, IPokemonTrainer> pokemonTrainers = new Hashtable<>();
+    private final Hashtable<PokemonTrainer, IPokemonTrainer> pokemonTrainers = new Hashtable<>();
 
     public PokemonArenaServerProxy(Socket socket, IPokemonArena pokemonArena) {
         this.socket = socket;
