@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -13,18 +14,20 @@ public class PokemonTrainer implements IPokemonTrainer, Serializable {
         this.pokemonTeam = pokemonTeam;
     }
 
+
+
+
+    public PokemonTeam getPokemonTeam() {
+        return this.pokemonTeam;
+    }
+
     @Override
-    public void receiveCommand(String command) {
-        System.out.println("Trainer " + this.name + " is requesting command " + command);
+    public void receiveCommand(String command) throws IOException {
+        System.out.println(this.name + " received: " + command);
     }
 
     @Override
     public String getName() {
         return this.name;
     }
-
-    public PokemonTeam getPokemonTeam() {
-        return this.pokemonTeam;
-    }
-
 }

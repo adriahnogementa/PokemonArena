@@ -5,9 +5,9 @@ import java.net.Socket;
 
 public class PokemonTrainerProxy implements IPokemonTrainer {
 
-    private Socket socket;
-    private RpcReader rpcReader;
-    private RpcWriter rpcWriter;
+    private final Socket socket;
+    private final RpcReader rpcReader;
+    private final RpcWriter rpcWriter;
 
 
     public PokemonTrainerProxy(Socket socket) throws IOException {
@@ -16,36 +16,19 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
         this.rpcWriter = new RpcWriter(new OutputStreamWriter(socket.getOutputStream()));
     }
 
+
+
+    public void endConnection() throws IOException {
+
+    }
+
     @Override
     public void receiveCommand(String command) throws IOException {
 
-        rpcReader.readLine();
-        rpcWriter.println("Command received");
-        rpcReader.readLine();
-        rpcWriter.println(command);
-
     }
 
     @Override
-    public String name() {
-        try {
-            rpcReader.readLine();
-            rpcWriter.println("Give me your name");
-            rpcReader.readLine();
-            rpcWriter.println("My name is " + rpcReader.readLine());
-            return rpcReader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    public void endConnection() throws IOException {
-        rpcReader.readLine();
-        rpcWriter.println("End the Connection");
-        try {
-            socket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public String getName() throws IOException {
+        return null;
     }
 }

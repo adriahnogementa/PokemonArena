@@ -12,7 +12,7 @@ public class Main {
         String pokemonTrainerName = scanner.nextLine();
         PokemonTrainer pokemonTrainer = new PokemonTrainer(pokemonTrainerName, new PokemonTeam());
 
-        PokemonArenaProxy pokemonArenaProxy = new PokemonArenaProxy(socket, pokemonTrainer);
+        PokemonArenaProxy pokemonArenaProxy = new PokemonArenaProxy(socket);
 
         boolean isRunning = true;
 
@@ -26,10 +26,10 @@ public class Main {
                 pokemonArenaProxy.sendCommand(command, pokemonTrainer);
                 break;
             case "2":
-                pokemonArenaProxy.enterPokemonArena(pokemonTrainer);
+                pokemonArenaProxy.addPokemonTrainer(pokemonTrainer);
                 break;
             case "3":
-                pokemonArenaProxy.exitPokemonArena(pokemonTrainer);
+                pokemonArenaProxy.removePokemonTrainer(pokemonTrainer);
                 break;
             case "4":
                 pokemonArenaProxy.endConnection();

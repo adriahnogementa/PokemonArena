@@ -4,5 +4,6 @@ public interface IPokemonTrainer {
 
     void receiveCommand(String command) throws IOException;
 
-    String name();
+    String getName() throws IOException;
+
 }
