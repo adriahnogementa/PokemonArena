@@ -4,15 +4,12 @@ public class Pokemon implements Serializable {
     String name;
     int hp;
     int attack;
-    int defense;
-    int initiative;
 
-    public Pokemon(String name, int hp, int attack, int defense, int initiative) {
+
+    public Pokemon(String name, int hp, int attack) {
         this.name = name;
         this.hp = hp;
         this.attack = attack;
-        this.defense = defense;
-        this.initiative = initiative;
     }
 
     public String getName() {
@@ -27,11 +24,4 @@ public class Pokemon implements Serializable {
         return attack;
     }
 
-    public int getDefense() {
-        return defense;
-    }
-
-    public int getInitiative() {
-        return initiative;
-    }
 }

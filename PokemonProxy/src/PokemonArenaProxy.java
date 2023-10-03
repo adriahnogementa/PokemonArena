@@ -19,8 +19,37 @@ public class PokemonArenaProxy implements IPokemonArena {
     }
 
     @Override
-    public void sendCommand(String command, IPokemonTrainer pokemonTrainer) {
+    public void sendCommand(String command, IPokemonTrainer pokemonTrainer) throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("0");
+        String id = pokemonTrainers.get(pokemonTrainer);
+        rpcWriter.println(id);
+        rpcReader.readLine();
+        if (command.startsWith("1")) {
+            rpcWriter.println("1");
 
+        } else if (command.startsWith("2")) {
+            rpcWriter.println("2");
+
+        }
+        String commandResult = rpcReader.readLine();
+        if (!commandResult.startsWith("0")) { // Command received
+            System.out.println("Command not received");
+        }
+    }
+
+    @Override
+    public boolean startBattle() throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("1"); // Start Battle
+        String commandResult = rpcReader.readLine();
+        if (commandResult.startsWith("0")) { // Battle will start soon
+            return true;
+        } else if (commandResult.startsWith("9")) {
+            System.out.println("Arena is empty! Wait for other PokemonTrainers to join the Arena");
+            return false;
+        }
+        return true;
     }
 
     @Override
