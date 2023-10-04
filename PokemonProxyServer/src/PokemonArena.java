@@ -1,10 +1,12 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 public class PokemonArena implements IPokemonArena {
 
     private final List<IPokemonTrainer> pokemonTrainers = new ArrayList<>();
+    private final Hashtable<IPokemonTrainer, String> pokemonTrainerBattleRound = new Hashtable<>();
 
     @Override
     public void sendCommand(String command, IPokemonTrainer pokemonTrainer) throws IOException {
@@ -13,53 +15,27 @@ public class PokemonArena implements IPokemonArena {
               return;
           }
 
-            if (!pokemonTrainer.hasAction() && getTheOtherTrainer(pokemonTrainer).hasAction()) {
+            if (!pokemonTrainer.hasAction() ) {
                 pokemonTrainer.receiveMessage("You have no action! Wait for your turn!");
                 return;
             }
-        if (command.startsWith("1")) {
-            pokemonTrainer.receiveMessage("You have chosen to attack!");
-            pokemonTrainers.forEach((pt) -> {
-                if (!pt.equals(pokemonTrainer)) {
-                    try {
-                        pt.receiveMessage(pokemonTrainer.getName() + " has chosen to attack!");
-                        //TODO: pt.receiveCommand("1"); + Irgendwie Damage einbauen
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+
+            if (command.startsWith("1")){
+                pokemonTrainerBattleRound.put(pokemonTrainer, "1");
+                for (IPokemonTrainer pt : pokemonTrainers){
+                    if (!pt.equals(pokemonTrainer)){
+                        pt.receiveMessage(pokemonTrainer.getName() + " used " + "Attack!");
                     }
                 }
-            });
-
-        } else if (command.startsWith("2")) {
-            pokemonTrainer.receiveMessage("You have chosen to defend!");
-            pokemonTrainers.forEach((pt) -> {
-                if (!pt.equals(pokemonTrainer)) {
-                    try {
-                        pt.receiveMessage(pokemonTrainer.getName() + " has chosen to defend!");
-                        //TODO: pt.receiveCommand("2"); + Irgendwie Dodge einbauen
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+            } else if (command.startsWith("2")) {
+                for (IPokemonTrainer pt : pokemonTrainers){
+                    if (!pt.equals(pokemonTrainer)){
+                        pt.receiveMessage(pokemonTrainer.getName() + " used " + "Dodge!");
                     }
                 }
-            });
-        }
-        pokemonTrainer.setActionStatus(false);
-        if (!onePokemonTrainerHasAction()){
-            pokemonTrainers.forEach((pt) -> {
-                try {
-                    pt.setActionStatus(true);
-                    pt.receiveMessage("You have action again!");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
+            }
+            pokemonTrainer.setActionStatus(false);
 
-
-    }
-
-    private boolean onePokemonTrainerHasAction() throws IOException {
-        return pokemonTrainers.get(0).hasAction() | pokemonTrainers.get(1).hasAction();
     }
 
 

@@ -23,12 +23,12 @@ public class PokemonTrainer implements IPokemonTrainer {
 
     @Override
     public void receiveMessage(String command) throws IOException {
-        System.out.println(this.name + " received: " + command);
+        System.out.println(command);
     }
 
     @Override
     public void receiveCommand(String command) throws IOException {
-        System.out.println(this.name + " received: " + command);
+        System.out.println(command);
     }
 
     @Override

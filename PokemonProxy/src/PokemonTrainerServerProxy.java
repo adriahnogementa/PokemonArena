@@ -69,9 +69,14 @@ public class PokemonTrainerServerProxy implements Runnable {
     }
 
     private void receiveCommand() throws IOException {
-        rpcWriter.println("Enter your command");
-        String command = rpcReader.readLine();
-        this.pokemonTrainer.receiveCommand(command);
+        try{
+            rpcWriter.println("Enter your command");
+            String command = rpcReader.readLine();
+            this.pokemonTrainer.receiveCommand(command);
+            rpcWriter.println("0. Command received");
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     private void hasAction() {
@@ -101,10 +106,10 @@ public class PokemonTrainerServerProxy implements Runnable {
 
     private void receiveMessage() {
         try {
-            rpcWriter.println("Enter your command");
+            rpcWriter.println("Enter your Message");
             String command = rpcReader.readLine();
             this.pokemonTrainer.receiveMessage(command);
-            rpcWriter.println("0. Command received");
+            rpcWriter.println("0. Command Message");
         } catch (IOException e) {
             e.printStackTrace();
             rpcWriter.println("1. Error while reading the command");

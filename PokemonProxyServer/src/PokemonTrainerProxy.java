@@ -73,14 +73,14 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
     }
 
     @Override
-    public void receiveMessage(String command) throws IOException {
+    public void receiveMessage(String message) throws IOException {
         try {
             rpcReader.readLine();
-            rpcWriter.println("4"); // Receive Command
+            rpcWriter.println("4"); // Receive Message
             rpcReader.readLine();
-            rpcWriter.println(command);
+            rpcWriter.println(message);
             String commandResult = rpcReader.readLine();
-            if (!commandResult.startsWith("0")) { // Command received
+            if (!commandResult.startsWith("0")) { // Message received
                 throw new RuntimeException(commandResult);
             }
 
@@ -97,7 +97,10 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
             rpcWriter.println("3"); // Receive Command
             rpcReader.readLine(); // Enter your command
             rpcWriter.println(command);
-
+            String commandResult = rpcReader.readLine();
+            if (!commandResult.startsWith("0")) { // Command received
+                throw new RuntimeException(commandResult);
+            }
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
