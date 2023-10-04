@@ -8,8 +8,16 @@ public interface IPokemonTrainer {
     boolean readyForBattle() throws IOException;
 
     void receiveMessage(String message) throws IOException;
+    //TODO: Remove this method
 
     void receiveCommand(String command) throws IOException;
+    boolean pokemonIsAlive() throws IOException;
+
+    void takeDamage(int damage) throws IOException;
+    int getAttackDamage() throws IOException;
+
+    int getInitiative() throws IOException;
+    int getDodgeChance() throws IOException;
 
     String getName() throws IOException;
 

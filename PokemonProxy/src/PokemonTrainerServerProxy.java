@@ -23,7 +23,7 @@ public class PokemonTrainerServerProxy implements Runnable {
             rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
             while (isRunning) {
 
-                rpcWriter.println("0. Action possible? ; 1. Set ActionStatus ; 2. Ready for Battle ; 3.Receive Command; 4.Receive Message ; 5. Get Trainer Name ; 6. End the Connection");
+                rpcWriter.println("Chose between 0 - 11");
                 String input = rpcReader.readLine();
 
                 switch (input) {
@@ -48,6 +48,21 @@ public class PokemonTrainerServerProxy implements Runnable {
                     case "6":
                         endConnection();
                         break;
+                    case "7":
+                        isAlive();
+                        break;
+                    case "8":
+                        getInitiative();
+                        break;
+                    case "9":
+                        takeDamage();
+                        break;
+                    case "10":
+                        getDodgeChance();
+                        break;
+                    case "11":
+                        getAttackDamage();
+                        break;
                     default:
                         rpcWriter.println("Invalid input");
                         break;
@@ -56,6 +71,53 @@ public class PokemonTrainerServerProxy implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void getAttackDamage() {
+        try {
+            int attackDamage = this.pokemonTrainer.getAttackDamage();
+            rpcWriter.println(attackDamage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void getDodgeChance() {
+        try {
+            int dodgeChance = this.pokemonTrainer.getDodgeChance();
+            rpcWriter.println(dodgeChance);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void takeDamage() {
+        try {
+            rpcWriter.println("Enter your Damage");
+            String damage = rpcReader.readLine();
+            System.out.println("### "+damage);
+            this.pokemonTrainer.takeDamage(Integer.parseInt(damage));
+        } catch (IOException e) {
+            e.printStackTrace();
+            rpcWriter.println("1. Error while reading the command");
+        }
+    }
+
+    private void getInitiative() {
+        try {
+            int initiative = this.pokemonTrainer.getInitiative();
+            rpcWriter.println(initiative);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void isAlive() {
+         if (pokemonTrainer.pokemonIsAlive()) {
+                rpcWriter.println("0. Pokemon is alive");
+            } else {
+                rpcWriter.println("9. Pokemon is dead");
+            }
     }
 
     private void setActionStatus() throws IOException {
@@ -107,8 +169,8 @@ public class PokemonTrainerServerProxy implements Runnable {
     private void receiveMessage() {
         try {
             rpcWriter.println("Enter your Message");
-            String command = rpcReader.readLine();
-            this.pokemonTrainer.receiveMessage(command);
+            String message = rpcReader.readLine();
+            this.pokemonTrainer.receiveMessage(message);
             rpcWriter.println("0. Command Message");
         } catch (IOException e) {
             e.printStackTrace();

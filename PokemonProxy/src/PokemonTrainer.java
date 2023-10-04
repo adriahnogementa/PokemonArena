@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.io.Serial;
-import java.io.Serializable;
 
 public class PokemonTrainer implements IPokemonTrainer {
     private boolean readyForBattle = false;
@@ -11,10 +9,6 @@ public class PokemonTrainer implements IPokemonTrainer {
         this.name = name;
         this.pokemon = pokemon;
     }
-
-
-
-
 
     @Override
     public boolean readyForBattle() throws IOException {
@@ -29,6 +23,31 @@ public class PokemonTrainer implements IPokemonTrainer {
     @Override
     public void receiveCommand(String command) throws IOException {
         System.out.println(command);
+    }
+
+    @Override
+    public boolean pokemonIsAlive() {
+        return !this.pokemon.isDead();
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        this.pokemon.takeDamage(damage);
+    }
+
+    @Override
+    public int getAttackDamage() {
+        return this.pokemon.getAttack();
+    }
+
+    @Override
+    public int getInitiative() {
+        return this.pokemon.getInitiative();
+    }
+
+    @Override
+    public int getDodgeChance() {
+        return this.pokemon.getDodgeChance();
     }
 
     @Override
@@ -52,12 +71,10 @@ public class PokemonTrainer implements IPokemonTrainer {
     @Override
     public void setActionStatus(boolean hasAction) {
         this.hasAction = hasAction;
-        System.out.println("ActionStatus changed: " + hasAction);
     }
 
-
-    public void setHasAction(boolean hasAction) {
-        this.hasAction = hasAction;
+    public Pokemon getPokemon() {
+        return pokemon;
     }
 }
 

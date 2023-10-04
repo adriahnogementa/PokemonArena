@@ -30,25 +30,22 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
     public boolean hasAction() throws IOException {
         rpcReader.readLine();
         rpcWriter.println("0"); // Has Action
-        String result = rpcReader.readLine();
-        if (result.startsWith("0")) { // Has Action
-            return true;
-        } else if (result.startsWith("9")) {
-            return false;
-        }
-        return false;
+        String result = rpcReader.readLine(); // Has Action ?
+        return result.startsWith("0");
     }
 
     @Override
     public void setActionStatus(boolean hasAction) throws IOException {
         try {
-         rpcReader.readLine();
+            rpcReader.readLine();
+            rpcWriter.println("1"); // Set ActionStatus
+            rpcReader.readLine();
             if (hasAction) {
-                rpcWriter.println("1"); // Set ActionStatus True
+                rpcWriter.println("0"); // Set ActionStatus True
             } else {
                 rpcWriter.println("9"); // Set ActionStatus False
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
@@ -61,15 +58,11 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
             rpcReader.readLine();
             rpcWriter.println("2"); // Ready for Battle
             String result = rpcReader.readLine();
-            if (result.startsWith("0")) { // Ready for Battle
-                return true;
-            } else if (result.startsWith("9")) {
-                return false;
-            }
+            return result.startsWith("0");  // Ready for Battle
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        return false;
     }
 
     @Override
@@ -105,6 +98,51 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean pokemonIsAlive() throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("7"); // Pokemon is Alive
+        String result = rpcReader.readLine();
+        return result.startsWith("0");
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        try {
+            rpcReader.readLine();
+            rpcWriter.println("9"); // Take Damage
+            rpcReader.readLine(); // Enter Damage
+            rpcWriter.println(String.valueOf(damage));
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public int getAttackDamage() throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("11"); // Get Attack Damage
+        String result = rpcReader.readLine();
+        return Integer.parseInt(result);
+    }
+
+    @Override
+    public int getInitiative() throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("8"); // Get Initiative
+        String result = rpcReader.readLine();
+        return Integer.parseInt(result);
+    }
+
+    @Override
+    public int getDodgeChance() throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("10"); // Get Dodge Chance
+        String result = rpcReader.readLine();
+        return Integer.parseInt(result);
     }
 
 

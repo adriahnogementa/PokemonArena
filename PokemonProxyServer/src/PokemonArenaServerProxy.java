@@ -25,7 +25,7 @@ public class PokemonArenaServerProxy implements Runnable {
             this.rpcWriter = new RpcWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
             while (isRunning) {
-                rpcWriter.println("1. Start Battle ; 2. Enter Arena ; 3. Leave Arena  ; 4. End the Connection");
+                rpcWriter.println("0. Send Command ; 1. Start Battle ; 2. Enter Arena ; 3. Leave Arena  ; 4. End the Connection");
                 String input = rpcReader.readLine();
                 switch (input) {
                     case "0":
@@ -57,29 +57,26 @@ public class PokemonArenaServerProxy implements Runnable {
         try {
             String trainerId = rpcReader.readLine();
             IPokemonTrainer pokemonTrainer = pokemonTrainers.get(trainerId);
-            rpcWriter.println("0. Send Command");
+            rpcWriter.println("Send Command");
             String command = rpcReader.readLine();
-            pokemonArena.sendCommand(command, pokemonTrainer);
             rpcWriter.println("0. Command sent");
-
+            pokemonArena.sendCommand(command, pokemonTrainer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void startBattle() {
-            try {
-                if(!pokemonArena.startBattle()){
-                    rpcWriter.println("9. Arena is Empty");
-                }else {
-                    rpcWriter.println("0. Battle will start soon");
-                }
-
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        try {
+            if (!pokemonArena.startBattle()) {
+                rpcWriter.println("9. Arena is Empty");
+            } else {
+                rpcWriter.println("0. Battle will start soon");
             }
 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void removePokemonTrainer() throws IOException, ClassNotFoundException {
@@ -146,6 +143,7 @@ public class PokemonArenaServerProxy implements Runnable {
             return pokemonTrainer;
         }
     }
+
 
 }
 

@@ -5,12 +5,17 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
 
+        PokemonTeam pokemonTeam = new PokemonTeam();
         Scanner scanner = new Scanner(System.in);
         Socket socket = new Socket("localhost", 9090);
 
         System.out.println("Enter your Pokemon Trainer name: ");
         String pokemonTrainerName = scanner.nextLine();
-        PokemonTrainer pokemonTrainer = new PokemonTrainer(pokemonTrainerName, new Pokemon("Pikachu", 100, 20));
+        System.out.println("Welcome " + pokemonTrainerName);
+        System.out.println("Choose your Pokemon: ");
+        System.out.println(pokemonTeam.toString());
+        String pokeNr = scanner.nextLine();
+        PokemonTrainer pokemonTrainer = new PokemonTrainer(pokemonTrainerName, pokemonTeam.getPokemon(Integer.parseInt(pokeNr)));
 
         PokemonArenaProxy pokemonArenaProxy = new PokemonArenaProxy(socket);
 
@@ -48,7 +53,7 @@ public class Main {
     private static void battleMenu(PokemonArenaProxy pokemonArenaProxy, PokemonTrainer pokemonTrainer) throws IOException {
         Scanner scanner = new Scanner(System.in);
         while (true){
-            System.out.println(">> 1. Attack ; 2. Dodge ;  " + pokemonTrainer.hasAction());
+            System.out.println(">> 1. Attack ; 2. Dodge ; 3. Show my Pokemon " + pokemonTrainer.hasAction());
             String input = scanner.nextLine();
             switch (input) {
                 case "1":
@@ -56,6 +61,9 @@ public class Main {
                     break;
                 case "2":
                     pokemonArenaProxy.sendCommand("2. Dodge", pokemonTrainer);
+                    break;
+                case "3":
+                    System.out.println(pokemonTrainer.getPokemon().toString());
                     break;
                 default:
                     System.out.println("Invalid input");
