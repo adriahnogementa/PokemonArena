@@ -23,4 +23,6 @@ public interface IPokemonTrainer {
     String getName() throws IOException;
 
     String getPokemonName() throws IOException;
+    int getPokemonHealth() throws IOException;
+
 }

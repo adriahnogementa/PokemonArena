@@ -6,4 +6,7 @@ public interface IPokemonArena {
     void addPokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException;
     void removePokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException;
 
+    String getEnemysPokemon(IPokemonTrainer pokemonTrainer) throws IOException;
+    int getEnemysPokemonHealth(IPokemonTrainer pokemonTrainer) throws IOException;
+
 }

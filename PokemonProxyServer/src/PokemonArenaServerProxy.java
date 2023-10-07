@@ -25,7 +25,7 @@ public class PokemonArenaServerProxy implements Runnable {
             this.rpcWriter = new RpcWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
             while (isRunning) {
-                rpcWriter.println("0. Send Command ; 1. Start Battle ; 2. Enter Arena ; 3. Leave Arena  ; 4. End the Connection");
+                rpcWriter.println("Enter Command 0 - 6");
                 String input = rpcReader.readLine();
                 switch (input) {
                     case "0":
@@ -43,6 +43,12 @@ public class PokemonArenaServerProxy implements Runnable {
                     case "4":
                         endConnection();
                         break;
+                    case "5":
+                        getEnemysPokemon();
+                        break;
+                    case "6":
+                        getEnemysPokemonHealth();
+                        break;
                     default:
                         rpcWriter.println("Invalid input");
                         break;
@@ -51,6 +57,20 @@ public class PokemonArenaServerProxy implements Runnable {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    private void getEnemysPokemon() throws IOException {
+        String trainerId = rpcReader.readLine();
+        IPokemonTrainer pokemonTrainer = pokemonTrainers.get(trainerId);
+        String pokemon = pokemonArena.getEnemysPokemon(pokemonTrainer);
+        rpcWriter.println(pokemon);
+    }
+
+    private void getEnemysPokemonHealth() throws IOException {
+        String trainerId = rpcReader.readLine();
+        IPokemonTrainer pokemonTrainer = pokemonTrainers.get(trainerId);
+        int pokemonHealth = pokemonArena.getEnemysPokemonHealth(pokemonTrainer);
+        rpcWriter.println(String.valueOf(pokemonHealth));
     }
 
     private void sendCommand() {

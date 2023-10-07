@@ -13,6 +13,7 @@ public interface IPokemonTrainer {
     int getDodgeChance();
     String getName();
     String getPokemonName();
+    int getPokemonHealth();
 
 
 }

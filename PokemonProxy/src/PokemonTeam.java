@@ -33,4 +33,13 @@ public class PokemonTeam extends ArrayList<Pokemon> {
     public Pokemon getPokemon(int i) {
         return this.get(i-1);
     }
+
+    public Pokemon findPokemonByName(String name) {
+        for (Pokemon pokemon : this) {
+            if (pokemon.getName().equals(name)) {
+                return pokemon;
+            }
+        }
+        return null;
+    }
 }

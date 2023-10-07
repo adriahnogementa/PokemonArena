@@ -72,13 +72,20 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
             rpcWriter.println("3"); // Get Pokemon Name
             String commandResult = rpcReader.readLine();
             if (commandResult.startsWith("0")) { // Pokemon name received
-                System.out.println("Pokemon name received");
                 return commandResult.substring(2);
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
         return "Missingo";
+    }
+
+    @Override
+    public int getPokemonHealth() throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("12"); // Get Pokemon Health
+        String result = rpcReader.readLine();
+        return Integer.parseInt(result);
     }
 
 
@@ -115,7 +122,7 @@ public class PokemonTrainerProxy implements IPokemonTrainer {
             rpcWriter.println("9"); // Take Damage
             rpcReader.readLine(); // Enter Damage
             rpcWriter.println(String.valueOf(damage));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 

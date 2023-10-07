@@ -9,6 +9,7 @@ public class PokemonArena implements IPokemonArena {
     private final Hashtable<IPokemonTrainer, String> pokemonTrainerBattleRound = new Hashtable<>();
     private boolean gameOver = false;
 
+
     @Override
     public void sendCommand(String command, IPokemonTrainer pokemonTrainer) throws IOException {
         if (gameOver) {
@@ -49,6 +50,13 @@ public class PokemonArena implements IPokemonArena {
         }
     }
 
+    //Here is the logic of the battle
+    //If both PokemonTrainers choose to attack, the PokemonTrainer with the higher initiative attacks first
+    //If both PokemonTrainers choose to dodge, nothing happens
+    //If one PokemonTrainer chooses to attack and the other to dodge, the PokemonTrainer who chose to attack attacks first
+    //If both PokemonTrainers have the same initiative, the random PokemonTrainer attacks first
+    //After each Attack there is a check if the pokemon is still alive
+    //If the pokemon is dead, the game is over
     private void resolveBattleRound() throws IOException {
         IPokemonTrainer pokemonTrainer1 = pokemonTrainers.get(0);
         IPokemonTrainer pokemonTrainer2 = pokemonTrainers.get(1);
@@ -226,6 +234,16 @@ public class PokemonArena implements IPokemonArena {
     public void removePokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException {
         this.pokemonTrainers.remove(pokemonTrainer);
         broadcastMessage(pokemonTrainer.getName() + " left the Arena!");
+    }
+
+    @Override
+    public String getEnemysPokemon(IPokemonTrainer pokemonTrainer) throws IOException {
+        return getOtherPokemonTrainer(pokemonTrainer).getPokemonName();
+    }
+
+    @Override
+    public int getEnemysPokemonHealth(IPokemonTrainer pokemonTrainer) throws IOException {
+        return getOtherPokemonTrainer(pokemonTrainer).getPokemonHealth();
     }
 
 }

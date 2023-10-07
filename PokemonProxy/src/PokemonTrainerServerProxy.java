@@ -23,7 +23,7 @@ public class PokemonTrainerServerProxy implements Runnable {
             rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
             while (isRunning) {
 
-                rpcWriter.println("Chose between 0 - 11");
+                rpcWriter.println("Chose between 0 - 12");
                 String input = rpcReader.readLine();
 
                 switch (input) {
@@ -36,9 +36,9 @@ public class PokemonTrainerServerProxy implements Runnable {
                     case "2":
                         readyForBattle();
                         break;
-                        case "3":
-                            getPokemonName();
-                            break;
+                    case "3":
+                        getPokemonName();
+                        break;
                     case "4":
                         receiveMessage();
                         break;
@@ -63,12 +63,24 @@ public class PokemonTrainerServerProxy implements Runnable {
                     case "11":
                         getAttackDamage();
                         break;
+                    case "12":
+                        getHealth();
+                        break;
                     default:
                         rpcWriter.println("Invalid input");
                         break;
                 }
             }
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void getHealth() {
+        try {
+            int health = this.pokemonTrainer.getPokemonHealth();
+            rpcWriter.println(String.valueOf(health));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -121,11 +133,11 @@ public class PokemonTrainerServerProxy implements Runnable {
     }
 
     private void isAlive() {
-         if (pokemonTrainer.pokemonIsAlive()) {
-                rpcWriter.println("0. Pokemon is alive");
-            } else {
-                rpcWriter.println("9. Pokemon is dead");
-            }
+        if (pokemonTrainer.pokemonIsAlive()) {
+            rpcWriter.println("0. Pokemon is alive");
+        } else {
+            rpcWriter.println("9. Pokemon is dead");
+        }
     }
 
     private void setActionStatus() throws IOException {

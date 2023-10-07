@@ -12,13 +12,15 @@ public class PokemonArenaProxy implements IPokemonArena {
     private final Hashtable<IPokemonTrainer, String> pokemonTrainers = new Hashtable<>();
     private int maxId= 0;
 
-
     public PokemonArenaProxy(Socket socket) throws IOException {
         this.socket = socket;
         this.rpcReader = new RpcReader(new InputStreamReader(socket.getInputStream()));
         this.rpcWriter = new RpcWriter(new OutputStreamWriter(socket.getOutputStream()));
     }
 
+    //This method is used to send the command to the server
+    //If the command is 1, the PokemonTrainer wants to attack
+    //If the command is 2, the PokemonTrainer wants to dodge
     @Override
     public void sendCommand(String command, IPokemonTrainer pokemonTrainer) throws IOException {
         rpcReader.readLine();
@@ -39,6 +41,8 @@ public class PokemonArenaProxy implements IPokemonArena {
         }
     }
 
+    //Battle starts only if there are at least 2 PokemonTrainers in the Arena
+    //If there are less than 2 PokemonTrainers, the Battle not start
     @Override
     public boolean startBattle() throws IOException {
         rpcReader.readLine();
@@ -73,6 +77,9 @@ public class PokemonArenaProxy implements IPokemonArena {
 
     }
 
+    //This method is used to send the PokemonTrainer to the server
+    //For Removing the PokemonTrainer from the Server and the Hashtable
+    //If the Server knows the PokemonTrainer, nothing happens
     @Override
     public void removePokemonTrainer(IPokemonTrainer pokemonTrainer) {
         try {
@@ -93,6 +100,25 @@ public class PokemonArenaProxy implements IPokemonArena {
 
     }
 
+    @Override
+    public String getEnemysPokemon(IPokemonTrainer pokemonTrainer) throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("5"); // Get Enemys Pokemon
+        String ret = pokemonTrainers.get(pokemonTrainer);
+        rpcWriter.println(ret);
+        return rpcReader.readLine(); // Enemys Pokemon
+    }
+
+    @Override
+    public int getEnemysPokemonHealth(IPokemonTrainer pokemonTrainer) throws IOException {
+        rpcReader.readLine();
+        rpcWriter.println("6"); // Get Enemys Pokemon Health
+        String ret = pokemonTrainers.get(pokemonTrainer);
+        rpcWriter.println(ret);
+        String health = rpcReader.readLine();
+        return Integer.parseInt(health); // Enemys Pokemon Health
+    }
+
 
     public void endConnection() {
         try {
@@ -102,6 +128,9 @@ public class PokemonArenaProxy implements IPokemonArena {
         }
     }
 
+    //This method is used to send the PokemonTrainer to the server
+    //If the PokemonTrainer is already known, the ID is sent
+    //If the PokemonTrainer is unknown, the PokemonTrainer is sent to the server
     private void sendPokemonTrainer(IPokemonTrainer pokemonTrainer) throws IOException {
         String ret = pokemonTrainers.get(pokemonTrainer);
         if (ret == null) {

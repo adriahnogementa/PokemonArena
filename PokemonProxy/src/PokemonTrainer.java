@@ -55,6 +55,11 @@ public class PokemonTrainer implements IPokemonTrainer {
         return this.pokemon.getName();
     }
 
+    @Override
+    public int getPokemonHealth() {
+        return this.pokemon.getHp();
+    }
+
 
     public void setReadyForBattle(boolean readyForBattle) {
         this.readyForBattle = readyForBattle;
