@@ -18,7 +18,7 @@ public class PokemonTeam extends ArrayList<Pokemon> {
     public String toString() {
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("PokemonTeam:");
+        stringBuilder.append("PokemonTeam: \n");
         for (int i = 0; i < this.size(); i++) {
             stringBuilder.append(i + 1).append(". ").append(this.get(i).getName()).append(" ");
             stringBuilder.append("HP: ").append(this.get(i).getHp()).append(" ");

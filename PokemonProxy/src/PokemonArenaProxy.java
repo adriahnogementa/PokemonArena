@@ -3,6 +3,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 
 public class PokemonArenaProxy implements IPokemonArena {
     private final Socket socket;
@@ -55,20 +56,16 @@ public class PokemonArenaProxy implements IPokemonArena {
     @Override
     public void addPokemonTrainer(IPokemonTrainer pokemonTrainer) {
         try {
-            if (pokemonTrainers.containsKey(pokemonTrainer)) {
-                System.out.println("You are already in the Arena");
-                return;
-            }
             rpcReader.readLine();
             rpcWriter.println("2"); // Enter Pokemon Arena
             sendPokemonTrainer(pokemonTrainer);
             String commandResult = rpcReader.readLine();
             if (commandResult.startsWith("0")) { // Pokemon Arena entered
-                System.out.println("PokemonTrainer joined Arena");
+                System.out.println("Pokemontrainer joined Arena");
             } else if (commandResult.startsWith("8")) {
                 System.out.println("Pokemontrainer already in Arena");
             } else if (commandResult.startsWith("9")) {
-                System.out.println("PokemonTrainer can't join Arena");
+                System.out.println("Pokemontrainer can't join Arena");
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -79,17 +76,16 @@ public class PokemonArenaProxy implements IPokemonArena {
     @Override
     public void removePokemonTrainer(IPokemonTrainer pokemonTrainer) {
         try {
-            if (!pokemonTrainers.containsKey(pokemonTrainer)) {
-                System.out.println("You have to enter the Arena first");
-                return;
-            }
             rpcReader.readLine();
             rpcWriter.println("3"); // Leave Pokemon Arena
-            sendPokemonTrainer(pokemonTrainer);
+            String ret = pokemonTrainers.get(pokemonTrainer);
+            rpcWriter.println(Objects.requireNonNullElse(ret, "-1"));
             String commandResult = rpcReader.readLine();
             if (commandResult.startsWith("0")) { // Pokemon Arena left
                 System.out.println("PokemonTrainer left Arena");
                 this.pokemonTrainers.remove(pokemonTrainer);
+            }else if (commandResult.startsWith("9")) {
+                System.out.println("PokemonTrainer can't leave Arena. Join the Arena first");
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

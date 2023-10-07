@@ -21,11 +21,6 @@ public class PokemonTrainer implements IPokemonTrainer {
     }
 
     @Override
-    public void receiveCommand(String command) throws IOException {
-        System.out.println(command);
-    }
-
-    @Override
     public boolean pokemonIsAlive() {
         return !this.pokemon.isDead();
     }
@@ -53,6 +48,11 @@ public class PokemonTrainer implements IPokemonTrainer {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getPokemonName() {
+        return this.pokemon.getName();
     }
 
 

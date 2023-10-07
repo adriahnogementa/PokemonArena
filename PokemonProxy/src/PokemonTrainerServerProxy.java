@@ -36,9 +36,9 @@ public class PokemonTrainerServerProxy implements Runnable {
                     case "2":
                         readyForBattle();
                         break;
-                    case "3":
-                        receiveCommand();
-                        break;
+                        case "3":
+                            getPokemonName();
+                            break;
                     case "4":
                         receiveMessage();
                         break;
@@ -73,6 +73,15 @@ public class PokemonTrainerServerProxy implements Runnable {
         }
     }
 
+    private void getPokemonName() {
+        try {
+            String pokemonName = this.pokemonTrainer.getPokemonName();
+            rpcWriter.println("0." + pokemonName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void getAttackDamage() {
         try {
             int attackDamage = this.pokemonTrainer.getAttackDamage();
@@ -95,7 +104,6 @@ public class PokemonTrainerServerProxy implements Runnable {
         try {
             rpcWriter.println("Enter your Damage");
             String damage = rpcReader.readLine();
-            System.out.println("### "+damage);
             this.pokemonTrainer.takeDamage(Integer.parseInt(damage));
         } catch (IOException e) {
             e.printStackTrace();
@@ -127,17 +135,6 @@ public class PokemonTrainerServerProxy implements Runnable {
             this.pokemonTrainer.setActionStatus(true);
         } else if (status.startsWith("9")) {
             this.pokemonTrainer.setActionStatus(false);
-        }
-    }
-
-    private void receiveCommand() throws IOException {
-        try{
-            rpcWriter.println("Enter your command");
-            String command = rpcReader.readLine();
-            this.pokemonTrainer.receiveCommand(command);
-            rpcWriter.println("0. Command received");
-        }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
         }
     }
 

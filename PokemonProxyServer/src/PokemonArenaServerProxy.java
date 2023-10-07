@@ -86,7 +86,6 @@ public class PokemonArenaServerProxy implements Runnable {
                 return;
             }
             pokemonArena.removePokemonTrainer(pokemonTrainer);
-            rpcWriter.println("0. Pokemon Trainer left Arena");
         } catch (Exception e) {
             e.printStackTrace();
             rpcWriter.println("9. Error while leaving the Pokemon Arena");
